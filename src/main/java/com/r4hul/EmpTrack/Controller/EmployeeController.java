@@ -1,6 +1,6 @@
-package com.r4hul.EmpTrack.Controllers;
+package com.r4hul.EmpTrack.Controller;
 
-import com.r4hul.EmpTrack.DTO.EmployeesDTO;
+import com.r4hul.EmpTrack.DTO.EmployeeDTO;
 import com.r4hul.EmpTrack.Services.EmployeeService;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,12 +17,12 @@ public class EmployeeController {
     }
 
     @PostMapping
-    EmployeesDTO addNewEmployee(@RequestBody EmployeesDTO employeesDTO){
-        return employeeService.addNewEmployee(employeesDTO);
+    EmployeeDTO addNewEmployee(@RequestBody EmployeeDTO employeeDTO){
+        return employeeService.addNewEmployee(employeeDTO);
     }
 
     @GetMapping
-    List<EmployeesDTO> getAllEmployee(){
+    List<EmployeeDTO> getAllEmployee(){
         return employeeService.getAllEmployee();
     }
 }

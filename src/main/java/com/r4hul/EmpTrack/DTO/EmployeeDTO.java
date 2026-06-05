@@ -4,7 +4,7 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-public class EmployeesDTO {
+public class EmployeeDTO {
 
     Long id;
     String name;
