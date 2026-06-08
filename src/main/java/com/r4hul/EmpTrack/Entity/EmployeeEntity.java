@@ -25,4 +25,8 @@ public class EmployeeEntity {
     private String email;
     private LocalDate dob;
     private boolean active;
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

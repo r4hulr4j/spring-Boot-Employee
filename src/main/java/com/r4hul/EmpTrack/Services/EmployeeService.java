@@ -4,10 +4,13 @@ import com.r4hul.EmpTrack.DTO.EmployeeDTO;
 import com.r4hul.EmpTrack.Entity.EmployeeEntity;
 import com.r4hul.EmpTrack.Repository.EmployeeRepository;
 import com.r4hul.EmpTrack.config.MapperConfig;
+import org.springframework.data.util.ReflectionUtils;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class EmployeeService {
@@ -35,5 +38,47 @@ public class EmployeeService {
             list.add(tempDTO);
         }
         return list;
+    }
+
+    public EmployeeDTO updateEmployeeById(EmployeeDTO employeeDTO, Long id) {
+
+        if(employeeRepository.findById(id).isEmpty()){
+            return addNewEmployee(employeeDTO);
+        }
+
+        EmployeeEntity newEntity = mapper.getModelMapper().map(employeeDTO , EmployeeEntity.class);
+        newEntity.setId(id);
+        employeeRepository.save(newEntity);
+        return mapper.getModelMapper().map(employeeRepository.findById(id), EmployeeDTO.class);
+    }
+
+    public boolean deleteEmployeeById(Long id) {
+        boolean isPresent = employeeRepository.existsById(id);
+        if(!isPresent){
+            return false;
+        }
+        employeeRepository.deleteById(id);
+        return true;
+    }
+
+    public EmployeeDTO updatePartialEmployeeById(Map<String, Object> updates, Long id) {
+        if(!employeeRepository.existsById(id)){
+            return null;
+        }
+
+        EmployeeEntity employeeEntity = employeeRepository.findById(id).get();
+
+        updates.forEach((field, value) -> {
+            Field fieldToBeUpdated = ReflectionUtils.getRequiredField(EmployeeEntity.class,field);
+            fieldToBeUpdated.setAccessible(true);
+            ReflectionUtils.setField(fieldToBeUpdated, employeeEntity, value);
+        });
+        employeeRepository.save(employeeEntity);
+
+        return mapper.getModelMapper().map(employeeEntity, EmployeeDTO.class);
+    }
+
+    public boolean isEmployeePresentById(Long id) {
+        return employeeRepository.existsById(id);
     }
 }

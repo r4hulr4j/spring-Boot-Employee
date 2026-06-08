@@ -2,9 +2,12 @@ package com.r4hul.EmpTrack.Controller;
 
 import com.r4hul.EmpTrack.DTO.EmployeeDTO;
 import com.r4hul.EmpTrack.Services.EmployeeService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(path = "/emp")
@@ -17,12 +20,52 @@ public class EmployeeController {
     }
 
     @PostMapping
-    EmployeeDTO addNewEmployee(@RequestBody EmployeeDTO employeeDTO){
-        return employeeService.addNewEmployee(employeeDTO);
+    ResponseEntity<EmployeeDTO> addNewEmployee(@RequestBody EmployeeDTO employeeDTO){
+        if(employeeDTO == null){
+            return ResponseEntity.notFound().build();
+        }
+        EmployeeDTO employeeDTO1 = employeeService.addNewEmployee(employeeDTO);
+        return new ResponseEntity<>(employeeDTO1, HttpStatus.CREATED);
     }
 
     @GetMapping
-    List<EmployeeDTO> getAllEmployee(){
-        return employeeService.getAllEmployee();
+    ResponseEntity<List<EmployeeDTO>> getAllEmployee(){
+        List<EmployeeDTO> list = employeeService.getAllEmployee();
+        if(list.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(list);
     }
+
+    @PutMapping("/{id}")
+    ResponseEntity<EmployeeDTO> updateEmployeeById(@RequestBody EmployeeDTO employeeDTO, @PathVariable Long id){
+        boolean isPresent = employeeService.isEmployeePresentById(id);
+        if(!isPresent){
+            return ResponseEntity.notFound().build();
+        }
+        EmployeeDTO employeeDTO1 = employeeService.updateEmployeeById(employeeDTO, id);
+        return ResponseEntity.ok(employeeDTO1);
+    }
+
+    @DeleteMapping("/{id}")
+    ResponseEntity<Boolean> deleteEmployeeById(@PathVariable Long id){
+        boolean isPresent = employeeService.isEmployeePresentById(id);
+        if(!isPresent){
+            return ResponseEntity.notFound().build();
+        }
+        boolean isDeleted = employeeService.deleteEmployeeById(id);
+        return ResponseEntity.ok(isDeleted);
+    }
+
+    @PatchMapping("/{id}")
+    ResponseEntity<EmployeeDTO> updatePartialEmployeeById(@RequestBody Map<String, Object> updates, @PathVariable Long id){
+        boolean isPresent = employeeService.isEmployeePresentById(id);
+        if(!isPresent){
+            return ResponseEntity.notFound().build();
+        }
+        EmployeeDTO employeeDTO = employeeService.updatePartialEmployeeById(updates, id);
+        return ResponseEntity.ok(employeeDTO);
+    }
+
+
 }
