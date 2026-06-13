@@ -21,7 +21,7 @@ public class EmployeeDTO {
     @Email(message = "Should be a valid email")
     String email;
 
-    @Past(message = "Date should be in past")
+    @Past(message = "Date should be in the past")
     LocalDate dob;
 
 
