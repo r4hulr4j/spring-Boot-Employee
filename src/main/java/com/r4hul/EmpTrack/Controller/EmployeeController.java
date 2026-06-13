@@ -2,6 +2,7 @@ package com.r4hul.EmpTrack.Controller;
 
 import com.r4hul.EmpTrack.DTO.EmployeeDTO;
 import com.r4hul.EmpTrack.Services.EmployeeService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ public class EmployeeController {
     }
 
     @PostMapping
-    ResponseEntity<EmployeeDTO> addNewEmployee(@RequestBody EmployeeDTO employeeDTO){
+    ResponseEntity<EmployeeDTO> addNewEmployee(@RequestBody @Valid EmployeeDTO employeeDTO){
         if(employeeDTO == null){
             return ResponseEntity.notFound().build();
         }
@@ -35,6 +36,12 @@ public class EmployeeController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(list);
+    }
+
+    @GetMapping(path = "/{id}")
+    ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable Long id){
+        EmployeeDTO employeeDTO = employeeService.getEmployeeById(id);
+        return ResponseEntity.ok(employeeDTO);
     }
 
     @PutMapping("/{id}")

@@ -11,6 +11,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class EmployeeService {
@@ -80,5 +81,10 @@ public class EmployeeService {
 
     public boolean isEmployeePresentById(Long id) {
         return employeeRepository.existsById(id);
+    }
+
+    public EmployeeDTO getEmployeeById(Long id) {
+        Optional<EmployeeEntity> employeeEntity = employeeRepository.findById(id);
+        return mapper.getModelMapper().map(employeeEntity, EmployeeDTO.class);
     }
 }
