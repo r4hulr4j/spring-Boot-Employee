@@ -8,10 +8,7 @@ import org.springframework.data.util.ReflectionUtils;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class EmployeeService {
@@ -83,8 +80,9 @@ public class EmployeeService {
         return employeeRepository.existsById(id);
     }
 
-    public EmployeeDTO getEmployeeById(Long id) {
+    public Optional<EmployeeDTO> getEmployeeById(Long id) {
         Optional<EmployeeEntity> employeeEntity = employeeRepository.findById(id);
-        return mapper.getModelMapper().map(employeeEntity, EmployeeDTO.class);
+        return employeeEntity
+                .map(emp -> mapper.getModelMapper().map(emp, EmployeeDTO.class));
     }
 }
