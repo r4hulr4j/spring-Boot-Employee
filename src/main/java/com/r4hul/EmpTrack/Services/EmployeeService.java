@@ -3,6 +3,7 @@ package com.r4hul.EmpTrack.Services;
 import com.r4hul.EmpTrack.DTO.EmployeeDTO;
 import com.r4hul.EmpTrack.Entity.EmployeeEntity;
 import com.r4hul.EmpTrack.Repository.EmployeeRepository;
+import com.r4hul.EmpTrack.common.exceptions.ResourceNotFoundException;
 import com.r4hul.EmpTrack.config.MapperConfig;
 import org.springframework.data.util.ReflectionUtils;
 import org.springframework.stereotype.Service;
@@ -39,9 +40,8 @@ public class EmployeeService {
     }
 
     public EmployeeDTO updateEmployeeById(EmployeeDTO employeeDTO, Long id) {
-
         if(employeeRepository.findById(id).isEmpty()){
-            return addNewEmployee(employeeDTO);
+            throw new ResourceNotFoundException("id : " + id);
         }
 
         EmployeeEntity newEntity = mapper.getModelMapper().map(employeeDTO , EmployeeEntity.class);
@@ -51,9 +51,8 @@ public class EmployeeService {
     }
 
     public boolean deleteEmployeeById(Long id) {
-        boolean isPresent = employeeRepository.existsById(id);
-        if(!isPresent){
-            return false;
+        if(!employeeRepository.existsById(id)){
+            throw new ResourceNotFoundException(" id : " + id);
         }
         employeeRepository.deleteById(id);
         return true;
@@ -61,7 +60,7 @@ public class EmployeeService {
 
     public EmployeeDTO updatePartialEmployeeById(Map<String, Object> updates, Long id) {
         if(!employeeRepository.existsById(id)){
-            return null;
+            throw new ResourceNotFoundException(" id : " + id);
         }
 
         EmployeeEntity employeeEntity = employeeRepository.findById(id).get();

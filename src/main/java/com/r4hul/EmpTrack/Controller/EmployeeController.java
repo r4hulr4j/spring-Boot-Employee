@@ -2,6 +2,7 @@ package com.r4hul.EmpTrack.Controller;
 
 import com.r4hul.EmpTrack.DTO.EmployeeDTO;
 import com.r4hul.EmpTrack.Services.EmployeeService;
+import com.r4hul.EmpTrack.common.exceptions.ResourceNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +21,6 @@ public class EmployeeController {
 
     public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
-    }
-
-    @ExceptionHandler(NoSuchElementException.class)
-    ResponseEntity<String> EmployeeNotFoundExceptionHandler(NoSuchElementException e){
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @PostMapping
@@ -50,27 +46,19 @@ public class EmployeeController {
         Optional<EmployeeDTO> employeeDTO = employeeService.getEmployeeById(id);
         return employeeDTO
                 .map(employeeDTO1 -> ResponseEntity.ok(employeeDTO1))
-                .orElseThrow(() -> new NoSuchElementException("Employee Not found with id : " + id + "."));
+                .orElseThrow(() -> new ResourceNotFoundException(" id : " + id));
     }
 
     @PutMapping("/{id}")
     ResponseEntity<EmployeeDTO> updateEmployeeById(@RequestBody EmployeeDTO employeeDTO, @PathVariable Long id){
-        boolean isPresent = employeeService.isEmployeePresentById(id);
-        if(!isPresent){
-            return ResponseEntity.notFound().build();
-        }
         EmployeeDTO employeeDTO1 = employeeService.updateEmployeeById(employeeDTO, id);
         return ResponseEntity.ok(employeeDTO1);
     }
 
     @DeleteMapping("/{id}")
     ResponseEntity<Boolean> deleteEmployeeById(@PathVariable Long id){
-        boolean isPresent = employeeService.isEmployeePresentById(id);
-        if(!isPresent){
-            return ResponseEntity.notFound().build();
-        }
-        boolean isDeleted = employeeService.deleteEmployeeById(id);
-        return ResponseEntity.ok(isDeleted);
+        employeeService.deleteEmployeeById(id);
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/{id}")
