@@ -27,8 +27,4 @@ public class EmployeeEntity {
     private boolean active;
     private String role;
     private int primeNumber;
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 }

@@ -29,13 +29,9 @@ public class EmployeeService {
     }
 
     public List<EmployeeDTO> getAllEmployee(){
-        List<EmployeeDTO> list = new ArrayList<>();
-
         List<EmployeeEntity> allEntity = employeeRepository.findAll();
-        for(var entity : allEntity){
-            EmployeeDTO tempDTO = mapper.getModelMapper().map(entity, EmployeeDTO.class);
-            list.add(tempDTO);
-        }
+        List<EmployeeDTO> list = allEntity.stream()
+                .map(n -> mapper.getModelMapper().map(n, EmployeeDTO.class)).toList();
         return list;
     }
 
