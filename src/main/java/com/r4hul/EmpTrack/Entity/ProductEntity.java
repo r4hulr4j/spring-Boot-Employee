@@ -3,25 +3,24 @@ package com.r4hul.EmpTrack.Entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Table(name = "product")
 @Entity
-@Table(name = "employees") // table name = "employees"
-public class EmployeeEntity {
+public class ProductEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
-    private String email;
-    private LocalDate dob;
-    private boolean active;
-    private String role;
-    private int primeNumber;
+    private String category;
+    private Double price;
+    private Integer stock;
+    private Double rating;
+    private String brand;
+    private Boolean active;
 }
