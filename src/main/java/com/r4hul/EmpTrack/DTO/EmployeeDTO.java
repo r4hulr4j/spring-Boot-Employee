@@ -2,6 +2,9 @@ package com.r4hul.EmpTrack.DTO;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.r4hul.EmpTrack.annotations.EmployeeRoleValidation;
 import com.r4hul.EmpTrack.annotations.PrimeNumberValidation;
+import com.r4hul.EmpTrack.common.Enum.RoleType;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 import java.time.LocalDate;
@@ -27,11 +30,11 @@ public class EmployeeDTO {
 
     boolean active;
 
+    @Enumerated(value = EnumType.STRING)
     @EmployeeRoleValidation
-    String role;
+    RoleType role;
 
     @NotNull
     @PrimeNumberValidation
     int primeNumber;
-
 }

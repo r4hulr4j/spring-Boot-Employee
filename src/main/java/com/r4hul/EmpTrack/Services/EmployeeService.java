@@ -2,9 +2,13 @@ package com.r4hul.EmpTrack.Services;
 
 import com.r4hul.EmpTrack.DTO.EmployeeDTO;
 import com.r4hul.EmpTrack.Entity.EmployeeEntity;
+import com.r4hul.EmpTrack.Entity.InsuranceEntity;
 import com.r4hul.EmpTrack.Repository.EmployeeRepository;
+import com.r4hul.EmpTrack.Repository.InsuranceRepository;
 import com.r4hul.EmpTrack.common.exceptions.ResourceNotFoundException;
 import com.r4hul.EmpTrack.config.MapperConfig;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.util.ReflectionUtils;
 import org.springframework.stereotype.Service;
 
@@ -12,15 +16,12 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
+    private final InsuranceRepository insuranceRepository;
     private final MapperConfig mapper;
-
-    public EmployeeService(EmployeeRepository employeeRepository, MapperConfig mapper) {
-        this.employeeRepository = employeeRepository;
-        this.mapper = mapper;
-    }
 
     public EmployeeDTO addNewEmployee(EmployeeDTO employeeDTO){
         EmployeeEntity temp = mapper.getModelMapper().map(employeeDTO, EmployeeEntity.class);
@@ -80,4 +81,16 @@ public class EmployeeService {
         return employeeEntity
                 .map(emp -> mapper.getModelMapper().map(emp, EmployeeDTO.class));
     }
+
+
+    @Transactional
+    public void assignInsuranceToEmployee(Long employeeId, Long insuranceID){
+
+        EmployeeEntity employee = employeeRepository.findById(employeeId).orElseThrow();
+        InsuranceEntity insurance = insuranceRepository.findById(insuranceID).orElseThrow();
+
+        employee.setInsuranceEntity(insurance); // required
+        insurance.setEmployeeEntity(employee); // recommended
+    }
+
 }

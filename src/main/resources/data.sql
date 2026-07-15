@@ -35,6 +35,8 @@ INSERT INTO employees
 VALUES
 ('Rahul Raj', 'rahul@example.com', '1998-05-12', true, 'ADMIN', 2),
 
+('Neeraj Waddar', 'neeraj@example.com', '2000-07-16', true, 'ADMIN', 3),
+
 ('Amit Sharma', 'amit@example.com', '1997-08-22', true, 'USER', 3),
 
 ('Neha Singh', 'neha@example.com', '1999-03-15', true, 'USER', 5),
